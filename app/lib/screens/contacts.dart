@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:app/models/contact.dart';
 import 'package:flutter/material.dart';
 
 class ContactsPage extends StatelessWidget {
