@@ -1,14 +1,12 @@
+import 'package:app/database/app_database.dart';
 import 'package:app/models/contact.dart';
 import 'package:flutter/material.dart';
 
 class ContactsPage extends StatelessWidget {
-  ContactsPage({super.key});
-
-  final List<Contact> contacts = [];
+  const ContactsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    contacts.add(Contact(id: 0, name: "Daniel", account: "000001-8"));
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -17,15 +15,30 @@ class ContactsPage extends StatelessWidget {
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      body: ListView.builder(
-        itemCount: contacts.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: _ContactItem(contact: contacts[index]),
-          );
+      body: FutureBuilder(
+        initialData: [],
+        future: findAll(),
+        builder: (context, snapshot) {
+          return snapshot.data != null
+              ? ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: _ContactItem(contact: snapshot.data![index]),
+                  );
+                },
+              )
+              : Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [CircularProgressIndicator(), Text("loading...")],
+                ),
+              );
         },
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.pushNamed(
@@ -58,7 +71,7 @@ class _ContactItem extends StatelessWidget {
           contact.name,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        subtitle: Text(contact.account),
+        subtitle: Text("${contact.account}"),
       ),
     );
   }

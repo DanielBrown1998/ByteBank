@@ -65,7 +65,11 @@ class _ContactFormState extends State<ContactForm> {
                 onPressed: () {
                   name = nameController.text;
                   account = accountController.text;
-                  Contact contact = Contact(id: 0, name: name, account: account);
+                  Contact contact = Contact(
+                    id: 0,
+                    name: name,
+                    account: int.parse(account),
+                  );
                   Navigator.pop(context, contact);
                 },
                 elevation: 10,

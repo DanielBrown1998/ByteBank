@@ -2,37 +2,35 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../models/contact.dart';
 
-final String tableName = "contact";
-
 Future<Database> createDatabase() async {
-  String database = await getDatabasesPath();
-  final String path = join(database, "bytebank.db");
-
-  return openDatabase(
+  final String dbPath = await getDatabasesPath();
+  String path = join(dbPath, "bankbyte.db");
+  Database database = await openDatabase(
     path,
-    onCreate: (db, version) {
-      db.execute(
-        "IF NOT EXISTS CREATE TABLE $tableName ("
-        "id INTEGER PRIMARY KEY, "
-        "name TEXT NOT NULL "
-        "account INTEGER NOT NULL); ",
-      );
-    },
     version: 1,
+    onCreate: (db, version) async {
+      await db.execute("create table contact(id INTEGER PRIMARY KEY, name TEXT, account INTEGER)");
+    },
+  );
+  return database;
+}
+
+Future<int> save(Contact contact) {
+  return createDatabase().then(
+    (db) async => await db.insert("contact", {
+      "id": contact.id,
+      "name": contact.name,
+      "account": contact.account,
+    }),
   );
 }
 
-Future<int> save(Contact contact) async {
-  Database db = await createDatabase();
-  return await db.insert(tableName, {
-    "id": contact.id,
-    "name": contact.name,
-    "account": contact.account,
+Future<List<Contact>?> findAll() {
+  return createDatabase().then((db) async {
+    return await db
+        .query("contact")
+        .then(
+          (list) => list.map((contact) => Contact.fromMap(contact)).toList(),
+        );
   });
-}
-
-Future<List<Contact>?> findAll() async {
-  Database db = await createDatabase();
-  List<Map<String, dynamic>> list = await db.query(tableName);
-  return list.map((contact) => Contact.fromMap(contact)).toList();
 }
