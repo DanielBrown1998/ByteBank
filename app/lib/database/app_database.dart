@@ -1,6 +1,5 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import '../models/contact.dart';
 
 Future<Database> getDatabase() async {
   final String dbPath = await getDatabasesPath();
@@ -17,24 +16,4 @@ Future<Database> getDatabase() async {
     singleInstance: true,
   );
   return database;
-}
-
-Future<int> save(Contact contact) {
-  return getDatabase().then(
-    (db) async => await db.insert("contact", {
-      "id": contact.id,
-      "name": contact.name,
-      "account": contact.account,
-    }),
-  );
-}
-
-Future<List<Contact>> findAll() {
-  return getDatabase().then((db) async {
-    return await db
-        .query("contact")
-        .then(
-          (list) => list.map((contact) => Contact.fromMap(contact)).toList(),
-        );
-  });
 }
