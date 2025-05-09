@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:app/database/app_database.dart';
+import 'package:app/database/dao/contact_dao.dart';
 import 'package:app/models/contact.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
@@ -17,6 +17,7 @@ class _ContactFormState extends State<ContactForm> {
   TextEditingController accountController = TextEditingController();
   late String name;
   late String account;
+  final ContactDao _dao = ContactDao();
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +79,7 @@ class _ContactFormState extends State<ContactForm> {
                         name: name,
                         account: int.parse(account),
                       );
-                      save(contact).then((value) {});
+                      _dao.save(contact).then((value) {});
                       validate = true;
                     } on DatabaseException {
                       validate = false;

@@ -1,4 +1,4 @@
-import 'package:app/database/app_database.dart';
+import 'package:app/database/dao/contact_dao.dart';
 import 'package:app/models/contact.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +10,8 @@ class ContactsPage extends StatefulWidget {
 }
 
 class _ContactsPageState extends State<ContactsPage> {
+  final ContactDao _dao = ContactDao();
+
   @override
   void initState() {
     super.initState();
@@ -36,7 +38,7 @@ class _ContactsPageState extends State<ContactsPage> {
       ),
       body: FutureBuilder<List<Contact>>(
         initialData: [],
-        future: findAll(),
+        future: _dao.findAll(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
