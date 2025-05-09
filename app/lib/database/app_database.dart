@@ -2,21 +2,25 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../models/contact.dart';
 
-Future<Database> createDatabase() async {
+Future<Database> getDatabase() async {
   final String dbPath = await getDatabasesPath();
   String path = join(dbPath, "bankbyte.db");
   Database database = await openDatabase(
     path,
     version: 1,
     onCreate: (db, version) async {
-      await db.execute("create table contact(id INTEGER PRIMARY KEY, name TEXT, account INTEGER)");
+      await db.execute(
+        "create table contact(id INTEGER PRIMARY KEY, name TEXT, account INTEGER)",
+      );
     },
+    onDowngrade: onDatabaseDowngradeDelete,
+    singleInstance: true,
   );
   return database;
 }
 
 Future<int> save(Contact contact) {
-  return createDatabase().then(
+  return getDatabase().then(
     (db) async => await db.insert("contact", {
       "id": contact.id,
       "name": contact.name,
@@ -25,8 +29,8 @@ Future<int> save(Contact contact) {
   );
 }
 
-Future<List<Contact>?> findAll() {
-  return createDatabase().then((db) async {
+Future<List<Contact>> findAll() {
+  return getDatabase().then((db) async {
     return await db
         .query("contact")
         .then(

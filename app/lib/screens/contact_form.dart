@@ -1,5 +1,9 @@
+import 'dart:math';
+
+import 'package:app/database/app_database.dart';
 import 'package:app/models/contact.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 
 class ContactForm extends StatefulWidget {
   const ContactForm({super.key});
@@ -13,6 +17,7 @@ class _ContactFormState extends State<ContactForm> {
   TextEditingController accountController = TextEditingController();
   late String name;
   late String account;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,12 +70,24 @@ class _ContactFormState extends State<ContactForm> {
                 onPressed: () {
                   name = nameController.text;
                   account = accountController.text;
-                  Contact contact = Contact(
-                    id: 0,
-                    name: name,
-                    account: int.parse(account),
-                  );
-                  Navigator.pop(context, contact);
+                  bool validate = false;
+                  while (!validate) {
+                    try {
+                      Contact contact = Contact(
+                        id: Random().nextInt(100),
+                        name: name,
+                        account: int.parse(account),
+                      );
+                      save(contact).then((value) {});
+                      validate = true;
+                    } on DatabaseException {
+                      validate = false;
+                    }
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("$name adicionado!")),
+                    );
+                    Navigator.pop(context);
+                  }
                 },
                 elevation: 10,
                 shape: BeveledRectangleBorder(),
