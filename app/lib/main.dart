@@ -1,6 +1,7 @@
 import 'package:app/screens/contact_form.dart';
 import 'package:app/screens/contacts.dart';
 import 'package:app/screens/home.dart';
+import 'package:app/screens/transaction.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -21,7 +22,15 @@ class App extends StatelessWidget {
         "/": (context) => const HomePage(title: "DashBoard"),
         "contacts": (context) => ContactsPage(),
         "contact_form": (context) => ContactForm(),
+        "transaction": (context) => TransactionPage(),
       },
     );
   }
 }
+//TODO
+//create model transaction
+//create DaO transasction
+//update database
+//create newPageTransaticon screen and integrate with db transaction
+//implements futurebuilder in transaction
+

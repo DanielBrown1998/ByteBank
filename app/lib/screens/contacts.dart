@@ -31,7 +31,7 @@ class _ContactsPageState extends State<ContactsPage> {
           ),
         ],
         title: Text(
-          "Contacts",
+          "Transfer",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -55,6 +55,8 @@ class _ContactsPageState extends State<ContactsPage> {
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
+                    //TODO implements onTap for NewTransactionPage
+                    //TODO in NewTransactionPage add log in db create 
                     child: _ContactItem(contact: snapshot.data![index]),
                   );
                 },
@@ -69,7 +71,9 @@ class _ContactsPageState extends State<ContactsPage> {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, "contact_form");
+          Navigator.pushNamed(context, "contact_form").then((value) {
+            setState(() {});
+          });
         },
         splashColor: Colors.green,
         child: Icon(Icons.add, color: Colors.white),

@@ -1,3 +1,4 @@
+import 'package:app/screens/components/home_button.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -36,40 +37,29 @@ class _HomePageState extends State<HomePage> {
               height: MediaQuery.of(context).size.height * .5,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              width: 175,
-              height: 125,
-              child: Material(
-                color: Colors.green.shade800,
-                child: InkWell(
-                  onTap: () async {
-                    Navigator.pushNamed(context, "contacts");
+          SizedBox(
+            height: 125,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                HomeButton(
+                  icon: Icons.monetization_on,
+                  name: "transfer",
+                  onCLick: () {
+                    Navigator.of(context).pushNamed("contacts");
                   },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.people_alt,
-                          color: Colors.white,
-                          size: 26,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "Contacts",
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
-              ),
+                HomeButton(
+                  icon: Icons.request_quote_rounded,
+                  name: "Transaction feed",
+                  onCLick: () => Navigator.of(context).pushNamed("transaction"),
+                ),
+                // HomeButton(
+                //   icon: Icons.request_quote_rounded,
+                //   name: "Transaction feed",
+                //   routeName: "transactions",
+                // ),
+              ],
             ),
           ),
         ],
