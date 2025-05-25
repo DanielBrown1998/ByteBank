@@ -1,4 +1,6 @@
+import 'package:app/models/transaction.dart';
 import 'package:app/screens/components/transfer_card.dart';
+import 'package:app/services/transactions_services.dart';
 import 'package:flutter/material.dart';
 
 class TransactionPage extends StatefulWidget {
@@ -9,16 +11,7 @@ class TransactionPage extends StatefulWidget {
 }
 
 class _TransactionPageState extends State<TransactionPage> {
-
-  //TODO create a table in bd
-  List<TransferCard> list = [
-    TransferCard(value: "234,43", account: 21),
-    TransferCard(value: "499,90", account: 5),
-    TransferCard(value: "523,32", account: 1),
-    TransferCard(value: "26", account: 2),
-    TransferCard(value: "324,13", account: 6),
-    TransferCard(value: "200", account: 3),
-  ];
+  TransactionService transactionService = TransactionService();
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +24,23 @@ class _TransactionPageState extends State<TransactionPage> {
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
       ),
-      //TODO: refactor with FutureBuilder
 
-      body: ListView.builder(
-        itemCount: list.length,
-        itemBuilder: (context, index) {
-          return list[index];
+      body: FutureBuilder(
+        future: transactionService.getTransactions(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            final transactions = snapshot.data as List<Transaction>;
+            return ListView.builder(
+              itemCount: transactions.length,
+              itemBuilder: (context, index) {
+                return TransferCard(transaction: transactions[index]);
+              },
+            );
+          }
         },
       ),
     );
