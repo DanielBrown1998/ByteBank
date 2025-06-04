@@ -2,13 +2,19 @@ import 'dart:convert';
 
 import 'package:app/models/transaction.dart';
 import 'package:app/services/access.dart';
+import 'package:app/services/interceptor.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_interceptor/http_interceptor.dart' as interceptor;
 
 class TransactionService {
+  final http.Client client = interceptor.InterceptedClient.build(
+    interceptors: [LoggingInterceptor()],
+  );
+  
   Future<List<Transaction>> getTransactions() async {
-    final http.Response response = await http.get(Uri.parse(url));
+    final http.Response response = await client.get(Uri.parse(url));
     if (response.statusCode == 200) {
-      final List<Map<String, dynamic>> data = json.decode(response.body);
+      final List<dynamic> data = json.decode(response.body);
       return data.map((json) => Transaction.fromJson(json)).toList();
     }
     return [];
@@ -32,7 +38,7 @@ class TransactionService {
     List<Map<String, dynamic>> jsonTransactions =
         transactions.map((toElement) => toElement.toJson()).toList();
 
-    final response = await http.post(
+    final response = await client.post(
       Uri.parse(url),
       headers: {
         'Content-Type': 'application/json',

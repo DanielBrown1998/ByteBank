@@ -1,2 +1,2 @@
-String url = "http://10.0.0.102:8082/transactions";
+String url = "http://192.168.1.4:8082/transactions";
 String password = "1000";
