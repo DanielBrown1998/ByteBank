@@ -10,28 +10,22 @@ class TransactionService {
   final http.Client client = interceptor.InterceptedClient.build(
     interceptors: [LoggingInterceptor()],
   );
-  
+
   Future<List<Transaction>> getTransactions() async {
     final http.Response response = await client.get(Uri.parse(url));
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
       return data.map((json) => Transaction.fromJson(json)).toList();
+    } else {
+      throw TransactionsServicesException("Failed to fetch transactions");
     }
-    return [];
   }
 
-  Future<void> addTransaction(Transaction transaction) async {
+  Future<Transaction?> addTransaction(Transaction transaction) async {
     List<Transaction> transactions = await getTransactions();
-
-    if (transactions.any(
-      (t) => t.name == transaction.name && t.value == transaction.value,
-    )) {
-      print("Transaction already exists");
-      return;
-    }
     if (transaction.name.isEmpty || transaction.value <= 0) {
       print("Invalid transaction data");
-      return;
+      throw TransactionsServicesException("Invalid transaction data");
     }
 
     transactions.add(transaction);
@@ -42,15 +36,30 @@ class TransactionService {
       Uri.parse(url),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $password',
+        'password': password,
       },
       body: json.encode(jsonTransactions),
     );
 
     if (response.statusCode != 201) {
+      print(response.statusCode);
       print('Failed to add transaction');
+      throw TransactionsServicesException("Failed to add transaction");
     } else if (response.statusCode == 201) {
       print("Transaction added successfully");
+      return transaction;
     }
+    return null;
+  }
+}
+
+class TransactionsServicesException implements Exception {
+  final String message;
+
+  TransactionsServicesException(this.message);
+
+  @override
+  String toString() {
+    return 'TransactionsServicesException: $message';
   }
 }

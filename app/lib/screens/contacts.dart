@@ -1,5 +1,6 @@
 import 'package:app/database/dao/contact_dao.dart';
 import 'package:app/models/contact.dart';
+import 'package:app/screens/transaction_form.dart';
 import 'package:flutter/material.dart';
 
 class ContactsPage extends StatefulWidget {
@@ -56,7 +57,7 @@ class _ContactsPageState extends State<ContactsPage> {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     //TODO implements onTap for NewTransactionPage
-                    //TODO in NewTransactionPage add log in db create 
+                    //TODO in NewTransactionPage add log in db create
                     child: _ContactItem(contact: snapshot.data![index]),
                   );
                 },
@@ -93,7 +94,13 @@ class _ContactItem extends StatelessWidget {
       shape: BeveledRectangleBorder(),
       child: ListTile(
         iconColor: Colors.black87,
-        onTap: () {},
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => TransactionForm(contact: contact),
+            ),
+          );
+        },
         textColor: Colors.black87,
         selectedColor: Colors.white,
         title: Text(

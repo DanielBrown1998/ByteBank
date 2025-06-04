@@ -23,6 +23,7 @@ class App extends StatelessWidget {
         "contacts": (context) => ContactsPage(),
         "contact_form": (context) => ContactForm(),
         "transaction": (context) => TransactionPage(),
+        
       },
     );
   }

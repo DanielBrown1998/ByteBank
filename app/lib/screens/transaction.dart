@@ -34,6 +34,9 @@ class _TransactionPageState extends State<TransactionPage> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
             final transactions = snapshot.data as List<Transaction>;
+            if (transactions.isEmpty) {
+              return Center(child: Text('No transactions found.', style: TextStyle(fontWeight: FontWeight.bold),));
+            }
             return ListView.builder(
               itemCount: transactions.length,
               itemBuilder: (context, index) {
