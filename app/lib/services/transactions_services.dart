@@ -23,7 +23,7 @@ class TransactionService {
 
   Future<Transaction?> addTransaction(Transaction transaction) async {
     List<Transaction> transactions = await getTransactions();
-    if (transaction.name.isEmpty || transaction.value <= 0) {
+    if (transaction.contact.name.isEmpty || transaction.value <= 0) {
       print("Invalid transaction data");
       throw TransactionsServicesException("Invalid transaction data");
     }

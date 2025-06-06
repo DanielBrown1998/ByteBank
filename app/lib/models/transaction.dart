@@ -1,37 +1,31 @@
-class Transaction {
-  final double value;
-  final String contact;
-  final String name;
+import 'contact.dart';
 
-  Transaction({required this.value, required this.contact, required this.name});
+class Transaction {
+  final String id;
+  final double value;
+  final Contact contact;
+
+  Transaction(
+      this.id,
+      this.value,
+      this.contact,
+      );
+
+  Transaction.fromJson(Map<String, dynamic> json) :
+      id = json['id'],
+      value = json['value'],
+      contact = Contact.fromJson(json['contact']);
+
+  Map<String, dynamic> toJson() =>
+      {
+        'id' : id,
+        'value': value,
+        'contact': contact.toJson(),
+      };
 
   @override
   String toString() {
-    return 'Transaction{value: $value, contact: $contact, name: $name}';
+    return 'Transaction{value: $value, contact: $contact}';
   }
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is Transaction &&
-        other.value == value &&
-        other.contact == contact &&
-        other.name == name;
-  }
-
-  @override
-  int get hashCode => value.hashCode ^ contact.hashCode;
-
-  factory Transaction.fromJson(Map<String, dynamic> json) {
-    return Transaction(
-      value: (json['value'] as num).toDouble(),
-      contact: json['contact'] as String,
-      name: json['name'] as String,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'value': value, 'contact': contact, 'name': name};
-  }
 }

@@ -1,17 +1,15 @@
+import 'package:app/database/dao/contact_dao.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-Future<Database> getDatabase(String sql) async {
-  final String dbPath = await getDatabasesPath();
-  String path = join(dbPath, "bankbyte.db");
-  Database database = await openDatabase(
+Future<Database> getDatabase() async {
+  final String path = join(await getDatabasesPath(), 'bytebank.db');
+  return openDatabase(
     path,
-    version: 1,
-    onCreate: (db, version) async {
-      await db.execute(sql);
+    onCreate: (db, version) {
+      db.execute(ContactDao.tableSql);
     },
-    onDowngrade: onDatabaseDowngradeDelete,
-    singleInstance: true,
+    version: 1,
   );
-  return database;
 }
+

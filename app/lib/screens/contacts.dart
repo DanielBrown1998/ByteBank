@@ -107,7 +107,7 @@ class _ContactItem extends StatelessWidget {
           contact.name,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        subtitle: Text("${contact.account}"),
+        subtitle: Text("${contact.accountNumber}"),
       ),
     );
   }

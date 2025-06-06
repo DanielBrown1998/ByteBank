@@ -1,37 +1,23 @@
-import 'package:app/screens/contact_form.dart';
-import 'package:app/screens/contacts.dart';
-import 'package:app/screens/home.dart';
-import 'package:app/screens/transaction.dart';
+import 'package:app/screens/dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 void main() {
-  runApp(const App());
+  runApp(BytebankApp());
 }
 
-class App extends StatelessWidget {
-  const App({super.key});
+class BytebankApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ByteBank',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+        primaryColor: Colors.green[900],
+        buttonTheme: ButtonThemeData(
+          buttonColor: Colors.blueAccent[700],
+          textTheme: ButtonTextTheme.primary,
+        ),
       ),
-      initialRoute: "/",
-      routes: {
-        "/": (context) => const HomePage(title: "DashBoard"),
-        "contacts": (context) => ContactsPage(),
-        "contact_form": (context) => ContactForm(),
-        "transaction": (context) => TransactionPage(),
-        
-      },
+      home: Dashboard(),
     );
   }
 }
-//TODO
-//create model transaction
-//create DaO transasction
-//update database
-//create newPageTransaticon screen and integrate with db transaction
-//implements futurebuilder in transaction
-

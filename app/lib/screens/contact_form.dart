@@ -1,105 +1,66 @@
-import 'dart:math';
-
 import 'package:app/database/dao/contact_dao.dart';
 import 'package:app/models/contact.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
 
 class ContactForm extends StatefulWidget {
-  const ContactForm({super.key});
-
   @override
-  State<ContactForm> createState() => _ContactFormState();
+  _ContactFormState createState() => _ContactFormState();
 }
 
 class _ContactFormState extends State<ContactForm> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController accountController = TextEditingController();
-  late String name;
-  late String account;
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _accountNumberController =
+      TextEditingController();
   final ContactDao _dao = ContactDao();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 10,
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title: Text(
-          "New Contact",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
+        title: Text('New contact'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          spacing: 10,
-          children: [
+          children: <Widget>[
+            TextField(
+              controller: _nameController,
+              decoration: InputDecoration(
+                labelText: 'Full name',
+              ),
+              style: TextStyle(
+                fontSize: 24.0,
+              ),
+            ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(top: 8.0),
               child: TextField(
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                controller: nameController,
+                controller: _accountNumberController,
                 decoration: InputDecoration(
-                  labelText: "name",
-                  icon: Icon(Icons.abc),
-                  iconColor: Colors.green.shade800,
+                  labelText: 'Account number',
                 ),
+                style: TextStyle(
+                  fontSize: 24.0,
+                ),
+                keyboardType: TextInputType.number,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                decoration: InputDecoration(
-                  labelText: "account",
-                  icon: Icon(Icons.money),
-                  iconColor: Colors.green.shade800,
-                ),
-                controller: accountController,
-                keyboardType: TextInputType.numberWithOptions(),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: MaterialButton(
-                minWidth: MediaQuery.of(context).size.width * .9,
-                onPressed: () {
-                  name = nameController.text;
-                  account = accountController.text;
-                  bool validate = false;
-                  while (!validate) {
-                    try {
-                      Contact contact = Contact(
-                        id: Random().nextInt(100),
-                        name: name,
-                        account: int.parse(account),
-                      );
-                      _dao.save(contact).then((value) {});
-                      validate = true;
-                    } on DatabaseException {
-                      validate = false;
-                    }
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("$name adicionado!")),
-                    );
-                    Navigator.pop(context);
-                  }
-                },
-                elevation: 10,
-                shape: BeveledRectangleBorder(),
-                color: Colors.green.shade700,
-                splashColor: Colors.green,
-                child: Text(
-                  "create",
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+              padding: const EdgeInsets.only(top: 16.0),
+              child: SizedBox(
+                width: double.maxFinite,
+                child: ElevatedButton(
+                  child: Text('Create'),
+                  onPressed: () {
+                    final String name = _nameController.text;
+                    final int accountNumber =
+                        int.parse(_accountNumberController.text);
+                    final Contact newContact = Contact(0, name, accountNumber);
+                    _dao.save(newContact).then((id) => Navigator.pop(context));
+                  },
                 ),
               ),
-            ),
+            )
           ],
         ),
       ),

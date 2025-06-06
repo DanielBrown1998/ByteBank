@@ -53,7 +53,7 @@ class TransferCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                transaction.name,
+                transaction.contact.name,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w300,
